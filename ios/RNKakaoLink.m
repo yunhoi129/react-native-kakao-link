@@ -1,6 +1,8 @@
 
 #import "RNKakaoLink.h"
 #import <KakaoLink/KakaoLink.h>
+#import <KakaoMessageTemplate/KakaoMessageTemplate.h>
+#import <KakaoMessageTemplate/KMTParamObject.h>
 
 @implementation RNKakaoLink
 
@@ -15,7 +17,7 @@ RCT_REMAP_METHOD(link,
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     KMTTemplate *template = [KMTFeedTemplate feedTemplateWithBuilderBlock:^(KMTFeedTemplateBuilder * _Nonnull feedTemplateBuilder) {
-        
+
         // 콘텐츠
         feedTemplateBuilder.content = [KMTContentObject contentObjectWithBuilderBlock:^(KMTContentBuilder * _Nonnull contentBuilder) {
             contentBuilder.title = @"디저트 사진";

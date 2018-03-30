@@ -10,6 +10,7 @@
 		B3E7B58A1CC2AC0600A0062D /* RNKakaoLink.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNKakaoLink.m */; };
 		DD6A11B0206E510300F7922D /* KakaoLink.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD6A11AE206E510300F7922D /* KakaoLink.framework */; };
 		DD6A11B1206E510300F7922D /* KakaoCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD6A11AF206E510300F7922D /* KakaoCommon.framework */; };
+		DD6A11C9206E544C00F7922D /* KakaoMessageTemplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD6A11C8206E544C00F7922D /* KakaoMessageTemplate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,7 @@
 		B3E7B5891CC2AC0600A0062D /* RNKakaoLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNKakaoLink.m; sourceTree = "<group>"; };
 		DD6A11AE206E510300F7922D /* KakaoLink.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoLink.framework; sourceTree = "<group>"; };
 		DD6A11AF206E510300F7922D /* KakaoCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoCommon.framework; sourceTree = "<group>"; };
+		DD6A11C8206E544C00F7922D /* KakaoMessageTemplate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = KakaoMessageTemplate.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD6A11B0206E510300F7922D /* KakaoLink.framework in Frameworks */,
+				DD6A11C9206E544C00F7922D /* KakaoMessageTemplate.framework in Frameworks */,
 				DD6A11B1206E510300F7922D /* KakaoCommon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -56,6 +59,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				DD6A11C8206E544C00F7922D /* KakaoMessageTemplate.framework */,
 				DD6A11AF206E510300F7922D /* KakaoCommon.framework */,
 				DD6A11AE206E510300F7922D /* KakaoLink.framework */,
 				B3E7B5881CC2AC0600A0062D /* RNKakaoLink.h */,
