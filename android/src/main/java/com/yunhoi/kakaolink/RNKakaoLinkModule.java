@@ -1,61 +1,117 @@
 
 package com.yunhoi.kakaolink;
 
-import com.facebook.react.bridge.Promise;
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
+
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.kakaonavi.KakaoNaviParams;
+import com.kakao.kakaonavi.KakaoNaviService;
+import com.kakao.kakaonavi.Location;
+import com.kakao.kakaonavi.NaviOptions;
+import com.kakao.kakaonavi.options.CoordType;
+import com.kakao.kakaonavi.options.RpOption;
+import com.kakao.kakaonavi.options.VehicleType;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
+import com.kakao.util.helper.log.Logger;
 
-import java.util.Map;
+public class RNKakaoLinkModule extends ReactContextBaseJavaModule implements ActivityEventListener{
 
-public class RNKakaoLinkModule extends ReactContextBaseJavaModule {
+    private final ReactApplicationContext reactContext;
 
-  private final ReactApplicationContext reactContext;
+    public RNKakaoLinkModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        reactContext.addActivityEventListener(this);
+        this.reactContext = reactContext;
+    }
 
-  public RNKakaoLinkModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.reactContext = reactContext;
-  }
+    private String getString(ReadableMap map, String key) {
 
-  @ReactMethod
-  public void link(Map<String, Object> params, Promise promise) {
+        if(map.hasKey(key)) {
+            Log.d("JIJUYEO", map.getString(key));
+            return map.getString(key);
+        }
+        return null;
+    }
 
-      FeedTemplate params = FeedTemplate
-              .newBuilder(ContentObject.newBuilder("디저트 사진",
-                      "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
-                      LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                              .setMobileWebUrl("https://developers.kakao.com").build())
-                      .setDescrption("아메리카노, 빵, 케익")
-                      .build())
-              .setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20)
-                      .setSharedCount(30).setViewCount(40).build())
-              .addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
-              .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
-                      .setWebUrl("'https://developers.kakao.com")
-                      .setMobileWebUrl("'https://developers.kakao.com")
-                      .setAndroidExecutionParams("key1=value1")
-                      .setIosExecutionParams("key1=value1")
-                      .build()))
-              .build();
+    @ReactMethod
+    public void navi(ReadableMap map) {
+        String name = getString(map, "name");
+        double lat = map.getDouble("lat");
+        double lng = map.getDouble("lng");
+        Location destination = Location.newBuilder(name, lng, lat).build();
+        NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.SHORTEST).build();
 
-      KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
-          @Override
-          public void onFailure(ErrorResult errorResult) {
-              Logger.e(errorResult.toString());
-          }
+// 경유지를 1개 포함하는 KakaoNaviParams.Builder 객체
+        KakaoNaviParams.Builder builder = KakaoNaviParams.newBuilder(destination).setNaviOptions(options);
+        KakaoNaviService.getInstance().navigate(reactContext.getCurrentActivity(), builder.build());
+    }
 
-          @Override
-          public void onSuccess(KakaoLinkResponse result) {
+    @ReactMethod
+    public void link(ReadableMap params) {
 
-          }
-      });
+        Log.d("JIJUYEOKAKAO", params.toString());
+
+        FeedTemplate feedParams = FeedTemplate
+                .newBuilder(
+                        ContentObject.newBuilder(
+                                getString(params, "title"),
+                                getString(params, "imageUrl"),
+                                LinkObject.newBuilder()
+                                        .setIosExecutionParams(getString(params, "iosExecutionParams"))
+                                        .setAndroidExecutionParams(getString(params, "androidExecutionParams"))
+                                        .build())
+                                .setDescrption(getString(params, "summary"))
+                                .build())
+                .addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder()
+                        .setIosExecutionParams(getString(params, "iosExecutionParams"))
+                        .setAndroidExecutionParams(getString(params, "androidExecutionParams"))
+                        .build()))
+                .build();
+
+        KakaoLinkService.getInstance().sendDefault(getCurrentActivity(), feedParams, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+
+            }
+        });
 
 
 
-  }
+    }
 
-  @Override
-  public String getName() {
-    return "RNKakaoLink";
-  }
+    @Override
+    public String getName() {
+        return "RNKakaoLink";
+    }
+
+    @Override
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Log.d("jijuyeo", "onNewIntent - Module Listener");
+        if(intent.getData() != null) {
+            Log.d("jijuyeo", intent.getData().toString());
+        }
+    }
 }
