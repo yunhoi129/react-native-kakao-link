@@ -32,8 +32,8 @@ RCT_EXPORT_METHOD(link: (NSDictionary *)params
         [feedTemplateBuilder addButton:[KMTButtonObject buttonObjectWithBuilderBlock:^(KMTButtonBuilder * _Nonnull buttonBuilder) {
             buttonBuilder.title = @"앱으로 이동";
             buttonBuilder.link = [KMTLinkObject linkObjectWithBuilderBlock:^(KMTLinkBuilder * _Nonnull linkBuilder) {
-                linkBuilder.iosExecutionParams = @"param1=value1&param2=value2";
-                linkBuilder.androidExecutionParams = @"param1=value1&param2=value2";
+                linkBuilder.iosExecutionParams = [params objectForKey:@"iosExecutionParams"];
+                linkBuilder.androidExecutionParams = [params objectForKey:@"androidExecutionParams"];
             }];
         }]];
     }];
